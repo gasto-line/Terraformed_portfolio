@@ -1,5 +1,5 @@
-resource "aws_dynamodb_table" "resume_counter" {
-  name           = "terraformed-resume-visitor-counter"
+resource "aws_dynamodb_table" "PF_counter" {
+  name           = "terraformed-PF-visitor-counter"
   billing_mode   = "PAY_PER_REQUEST"  # No need to specify read/write capacity
   hash_key       = "id"               # Primary key
 
@@ -9,7 +9,7 @@ resource "aws_dynamodb_table" "resume_counter" {
   }
 
   tags = {
-    Name        = "Resume Visitor Counter"
+    Name        = "PF Visitor Counter"
     Environment = "Terraform"
   }
 }

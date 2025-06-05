@@ -1,22 +1,23 @@
-resource "aws_s3_bucket" "resume_bucket" {
-  bucket = "terraformed-resume-bucket"  # Change to a unique name
+resource "aws_s3_bucket" "PF_bucket" {
+  bucket = "terraformed-portfolio-bucket"  # Change to a unique name
 
   tags = {
-    Name        = "Resume Bucket"
+    Name        = "PF Bucket"
     Environment = "Terraform"
   }
 }
 
-resource "aws_s3_bucket_public_access_block" "resume_bucket_block" {
-  bucket = aws_s3_bucket.resume_bucket.id
+resource "aws_s3_bucket_public_access_block" "PF_bucket_block" {
+  bucket = aws_s3_bucket.PF_bucket.id
 
-  block_public_acls       = false
-  block_public_policy     = false
-  restrict_public_buckets = false
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
 }
 
-resource "aws_s3_bucket_website_configuration" "resume_website" {
-  bucket = aws_s3_bucket.resume_bucket.id
+resource "aws_s3_bucket_website_configuration" "PF_website" {
+  bucket = aws_s3_bucket.PF_bucket.id
 
   index_document {
     suffix = "index.html"
@@ -25,8 +26,8 @@ resource "aws_s3_bucket_website_configuration" "resume_website" {
 }
 
 
-resource "aws_s3_bucket_policy" "resume_bucket_policy" {
-  bucket = aws_s3_bucket.resume_bucket.id
+resource "aws_s3_bucket_policy" "PF_bucket_policy" {
+  bucket = aws_s3_bucket.PF_bucket.id
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -37,10 +38,10 @@ resource "aws_s3_bucket_policy" "resume_bucket_policy" {
           Service = "cloudfront.amazonaws.com"
         }
         Action    = "s3:GetObject"
-        Resource  = "${aws_s3_bucket.resume_bucket.arn}/*"
+        Resource  = "${aws_s3_bucket.PF_bucket.arn}/*"
         Condition = {
           StringEquals = {
-            "AWS:SourceArn" = aws_cloudfront_distribution.resume_cloudfront.arn
+            "AWS:SourceArn" = aws_cloudfront_distribution.PF_cloudfront.arn
           }
         }
       }
@@ -49,35 +50,33 @@ resource "aws_s3_bucket_policy" "resume_bucket_policy" {
 }
 
 
-
-# Here we define and upload all the files that we want in our s3 bucket
-resource "aws_s3_object" "resume_index" {
-  bucket = aws_s3_bucket.resume_bucket.id
+resource "aws_s3_object" "cloud_PF_index" {
+  bucket = aws_s3_bucket.PF_bucket.id
   key    = "index.html"
-  source = "./resume_files/CV_2025.html"
+  source = var.cloud_PF_path
   content_type = "text/html"
-  etag = filemd5("./resume_files/CV_2025.html")
+  etag = filemd5("./PF_files/index.html")
 }
 
-resource "aws_s3_object" "resume_js_script" {
-  bucket = aws_s3_bucket.resume_bucket.id
-  key    = "script.js"
-  source = "./resume_files/script.js"
-  content_type = "application/javascript"
-  etag = filemd5("./resume_files/script.js")
+
+resource "aws_s3_object" "cv_en" {
+  bucket        = aws_s3_bucket.PF_bucket.id
+  key           = "cv_en.pdf"
+  source       = var.cv_en_path
+  content_type  = "application/pdf"
 }
 
-resource "aws_s3_object" "resume_css_script" {
-  bucket = aws_s3_bucket.resume_bucket.id
-  key    = "booster.css"
-  source = "./resume_files/booster.css"
-  content_type = "text/css"
-  etag = filemd5("./resume_files/booster.css")
+resource "aws_s3_object" "cv_fr" {
+  bucket        = aws_s3_bucket.PF_bucket.id
+  key           = "cv_fr.pdf"
+  source       = var.cv_fr_path
+  content_type  = "application/pdf"
 }
 
 resource "aws_s3_object" "counter_js" {
-  bucket        = aws_s3_bucket.resume_bucket.id
+  bucket        = aws_s3_bucket.PF_bucket.id
   key           = "counter.js"
   content       = local.counter_js
   content_type  = "application/javascript"
 }
+

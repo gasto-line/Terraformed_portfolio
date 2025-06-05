@@ -45,7 +45,7 @@
 
   <div class="section">
     <h2>💻 My Projects</h2>
-    <a href="https://github.com/your-username/cloud-resume" target="_blank">Terraform Infrastructure Code</a>
+    <a href="https://github.com/gasto-line/Terraformed_portfolio" target="_blank">Terraform Infrastructure Code</a>
   </div>
 
   <div class="section">
@@ -53,17 +53,8 @@
     <p>Total Visits: <span id="visit-count">Loading...</span></p>
   </div>
 
-  <script>
-    fetch('https://your-api-id.execute-api.region.amazonaws.com/prod/visits')
-      .then(response => response.json())
-      .then(data => {
-        document.getElementById('visit-count').innerText = data.visits;
-      })
-      .catch(err => {
-        console.error('Error fetching visit count:', err);
-        document.getElementById('visit-count').innerText = 'N/A';
-      });
-  </script>
+  <script src="counter.js"></script>
+
 
 </body>
 </html>

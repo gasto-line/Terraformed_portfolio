@@ -1,9 +1,20 @@
-locals {
-  counter_template = file("${path.module}/resume_files/counter_template.js")
-  counter_js       = replace(local.counter_template, "__API_GATEWAY_URL__", "${aws_apigatewayv2_api.resume_api.api_endpoint}/increment")
-}
 
 variable "account_id" {
   description = "The AWS account ID"
+  type        = string
+}
+
+variable "cv_en_path" {
+  description = "Local path to the English CV"
+  type        = string
+}
+
+variable "cv_fr_path" {
+  description = "Local path to the French CV"
+  type        = string
+}
+
+variable "cloud_PF_path" {
+  description = "Local path to the index of the portefolio"
   type        = string
 }
